@@ -1,0 +1,135 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── CSS VARIABLES ─────────────────────────────────────── */
+:root {
+  --bg: #080c10;
+  --surface: #0d1117;
+  --surface2: #161b22;
+  --surface3: #1c2430;
+  --border: #21262d;
+  --border2: #30363d;
+  --text: #e6edf3;
+  --text2: #8b949e;
+  --text3: #484f58;
+  --accent: #00ff88;
+  --accent2: #00cc6e;
+  --agent: #7c3aed;
+  --agent-light: #a855f7;
+  --fn: #0ea5e9;
+  --fn-light: #38bdf8;
+  --output: #f59e0b;
+  --output-light: #fbbf24;
+  --trigger: #ef4444;
+  --trigger-light: #f87171;
+  --condition: #10b981;
+  --condition-light: #34d399;
+}
+
+/* ─── RESETS ─────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+}
+
+/* ─── SCROLLBAR ──────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--surface);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border2);
+  border-radius: 2px;
+}
+
+/* ─── ANIMATIONS ─────────────────────────────────────────── */
+@keyframes logoPulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 12px var(--accent); }
+  50%       { opacity: 0.6; box-shadow: 0 0 4px var(--accent); }
+}
+
+@keyframes runnerPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+@keyframes edgeDash {
+  to { stroke-dashoffset: -12; }
+}
+
+@keyframes toastIn {
+  from { transform: translateX(20px); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+@keyframes modalSlideUp {
+  from { transform: translateY(12px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+@keyframes overlayFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ─── UTILITY CLASSES ────────────────────────────────────── */
+.font-syne      { font-family: 'Syne', sans-serif; }
+.font-mono      { font-family: 'IBM Plex Mono', monospace; }
+.font-space     { font-family: 'Space Mono', monospace; }
+
+.animate-logo-pulse  { animation: logoPulse 2s ease-in-out infinite; }
+.animate-runner      { animation: runnerPulse 1s ease-in-out infinite; }
+.animate-edge-dash   { animation: edgeDash 1.5s linear infinite; }
+.animate-toast-in    { animation: toastIn 0.2s ease forwards; }
+.animate-modal       { animation: modalSlideUp 0.2s ease forwards; }
+.animate-overlay     { animation: overlayFadeIn 0.15s ease forwards; }
+
+/* ─── CANVAS GRID BACKGROUND ─────────────────────────────── */
+.canvas-grid {
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(124, 58, 237, 0.04) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(0, 255, 136, 0.03) 0%, transparent 50%),
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 28px 28px, 28px 28px;
+}
+
+/* ─── NODE TYPE BORDER COLORS ────────────────────────────── */
+.node-border-trigger   { border-top: 3px solid var(--trigger); }
+.node-border-agent     { border-top: 3px solid var(--agent); }
+.node-border-function  { border-top: 3px solid var(--fn); }
+.node-border-output    { border-top: 3px solid var(--output); }
+.node-border-condition { border-top: 3px solid var(--condition); }
+
+/* ─── FIELD RANGE INPUT ──────────────────────────────────── */
+input[type='range'] {
+  accent-color: var(--accent);
+  width: 100%;
+}
+
+/* ─── CODE TEXTAREA ──────────────────────────────────────── */
+.code-editor {
+  color: var(--fn-light) !important;
+  background: #0d1117 !important;
+  font-size: 12px !important;
+  min-height: 140px;
+}
