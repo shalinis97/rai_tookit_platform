@@ -3,6 +3,7 @@ from typing import List
 
 
 class Settings(BaseSettings):
+    OPA_URL: str = "http://localhost:8181"
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     # Database
@@ -10,6 +11,7 @@ class Settings(BaseSettings):
 
     # AI
     OPENAI_API_KEY: str = ""
+    ANTHROPIC_API_KEY: str = ""
     OPENAI_BASE_URL: str = "https://api.openai.com/v1"
 
     # Security

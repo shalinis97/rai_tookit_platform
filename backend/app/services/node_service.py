@@ -102,6 +102,7 @@ async def batch_save(
                 workflow_id=workflow_id,
                 from_node_id=from_id,
                 to_node_id=to_id,
+                source_handle=item.source_handle or 'out',
             )
             db.add(edge)
             await db.flush()

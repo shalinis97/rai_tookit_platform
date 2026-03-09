@@ -35,21 +35,36 @@ export default function EdgeLayer({ mousePos }) {
 
       {/* Existing edges */}
       {activeWorkflow.edges.map((edge) => {
-        const from = getPortPosition(edge.from, 'out');
+        const handle = edge.source_handle || 'out';
+        const from = getPortPosition(edge.from, handle);
         const to = getPortPosition(edge.to, 'in');
         const d = getBezierPath(from.x, from.y, to.x, to.y);
+        const isTrueBranch  = handle === 'true';
+        const isFalseBranch = handle === 'false';
+        const edgeColor = isTrueBranch ? '#34d399' : isFalseBranch ? '#f87171' : (isRunning ? 'var(--accent)' : 'var(--border2)');
+        const midX = (from.x + to.x) / 2;
+        const midY = (from.y + to.y) / 2;
 
         return (
-          <path
-            key={edge.id}
-            d={d}
-            fill="none"
-            strokeWidth={1.5}
-            stroke={isRunning ? 'var(--accent)' : 'var(--border2)'}
-            strokeDasharray={isRunning ? '6' : undefined}
-            className={isRunning ? 'animate-edge-dash' : undefined}
-            markerEnd={`url(#${isRunning ? 'arrow-active' : 'arrow-default'})`}
-          />
+          <g key={edge.id}>
+            <path
+              d={d}
+              fill="none"
+              strokeWidth={1.5}
+              stroke={edgeColor}
+              strokeDasharray={isRunning ? '6' : undefined}
+              className={isRunning ? 'animate-edge-dash' : undefined}
+              markerEnd={`url(#${isRunning ? 'arrow-active' : 'arrow-default'})`}
+            />
+            {(isTrueBranch || isFalseBranch) && (
+              <g>
+                <rect x={midX - 16} y={midY - 8} width={32} height={16} rx={4} fill="var(--surface)" stroke={edgeColor} strokeWidth={1} />
+                <text x={midX} y={midY + 4} textAnchor="middle" fontSize={9} fill={edgeColor} fontFamily="Space Mono, monospace" fontWeight={700}>
+                  {handle.toUpperCase()}
+                </text>
+              </g>
+            )}
+          </g>
         );
       })}
 

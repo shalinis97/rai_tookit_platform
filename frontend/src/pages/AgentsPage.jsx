@@ -5,9 +5,10 @@ import useWorkflowStore from '../store/workflowStore';
 import { NODE_TYPES } from '../constants/nodeTypes';
 
 const STATUS = {
-  active:   { dot: 'var(--accent)',       bg: 'rgba(0,255,136,0.1)' },
-  draft:    { dot: 'var(--text3)',         bg: 'rgba(72,79,88,0.2)' },
-  archived: { dot: 'var(--trigger-light)', bg: 'rgba(239,68,68,0.1)' },
+  active:      { dot: 'var(--accent)',       bg: 'rgba(0,255,136,0.1)' },
+  draft:       { dot: 'var(--text3)',         bg: 'rgba(72,79,88,0.2)' },
+  archived:    { dot: 'var(--trigger-light)', bg: 'rgba(239,68,68,0.1)' },
+  quarantined: { dot: '#f87171',             bg: 'rgba(239,68,68,0.15)' },
 };
 
 function WorkflowCard({ wf, onEdit, onUse, style }) {
@@ -116,20 +117,21 @@ function WorkflowCard({ wf, onEdit, onUse, style }) {
 
       {/* Actions */}
       <div style={{ display: 'flex', gap: 6 }}>
-        {/* Use */}
-        <button
-          onClick={() => onUse(wf)}
-          style={{
-            flex: 1, padding: '9px 0', borderRadius: 6, border: 'none',
-            background: 'var(--accent)', color: '#000',
-            fontFamily: 'Syne, sans-serif', fontWeight: 700, fontSize: 13,
-            cursor: 'pointer', transition: 'all 0.15s', letterSpacing: '0.2px',
-          }}
-          onMouseEnter={e => e.currentTarget.style.boxShadow = '0 0 18px rgba(0,255,136,0.35)'}
-          onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}
-        >
-          Use
-        </button>
+        {/* Use — disabled if quarantined */}
+        {wf.status === 'quarantined' ? (
+          <div style={{ flex: 1, padding: '9px 0', borderRadius: 6, background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.25)', color: '#f87171', fontFamily: 'Syne, sans-serif', fontWeight: 700, fontSize: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, letterSpacing: '0.2px' }}>
+            🔒 Quarantined
+          </div>
+        ) : (
+          <button
+            onClick={() => onUse(wf)}
+            style={{ flex: 1, padding: '9px 0', borderRadius: 6, border: 'none', background: 'var(--accent)', color: '#000', fontFamily: 'Syne, sans-serif', fontWeight: 700, fontSize: 13, cursor: 'pointer', transition: 'all 0.15s', letterSpacing: '0.2px' }}
+            onMouseEnter={e => e.currentTarget.style.boxShadow = '0 0 18px rgba(0,255,136,0.35)'}
+            onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}
+          >
+            Use
+          </button>
+        )}
         {/* Edit */}
         <button
           onClick={() => onEdit(wf)}
@@ -290,7 +292,7 @@ export default function AgentsPage({ onEditWorkflow, onNewWorkflow, onUseWorkflo
 
       {/* ── LOWER HALF — cards ──────────────────────────────── */}
       <div style={{
-        flex: 1, overflowX: 'auto', overflowY: 'hidden',
+        flex: 1, overflowX: 'auto', overflowY: 'auto',
         padding: '24px 44px',
       }}>
         {filtered.length === 0 ? (
@@ -318,7 +320,7 @@ export default function AgentsPage({ onEditWorkflow, onNewWorkflow, onUseWorkflo
           <div style={{
             display: 'grid',
             gridTemplateColumns: `repeat(${Math.min(filtered.length, 4)}, minmax(260px, 1fr))`,
-            gap: 16, height: '100%', alignContent: 'start',
+            gap: 16, alignContent: 'start',
           }}>
             {filtered.map((wf, i) => (
               <WorkflowCard

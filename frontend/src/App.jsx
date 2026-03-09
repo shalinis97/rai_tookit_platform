@@ -3,6 +3,8 @@ import AppShell from './components/Layout/AppShell';
 import WorkflowEditorPage from './pages/WorkflowEditorPage';
 import ChatPage from './pages/ChatPage';
 import { useWorkflowData } from './hooks/useWorkflowData';
+import QuarantinePage from './pages/QuarantinePage';
+import { workflowsApi as wfApi } from './api/workflows';
 import { workflowsApi } from './api/workflows';
 import useWorkflowStore from './store/workflowStore';
 
@@ -56,9 +58,25 @@ export default function App() {
   }, [refetch]);
 
   // ── Back from chat → shell (session reset by unmounting) ──
-  const goBackFromChat = useCallback(() => {
+  const goBackFromChat = useCallback(async () => {
     setChatWorkflow(null);
     setView('shell');
+    await refetch();   // refresh workflow list so quarantine status shows
+  }, [refetch]);
+
+  // ── Edit quarantined workflow ──────────────────────────────
+  const openEditFromQuarantine = useCallback(async (wf) => {
+    try {
+      const full = await wfApi.get(wf.id);
+      const store = useWorkflowStore.getState();
+      const already = store.workflows.find(w => w.id === wf.id);
+      if (!already) {
+        store.setWorkflows([...store.workflows, full]);
+      }
+      store.setActiveWorkflow(wf.id);
+      setEditingId(wf.id);
+      setView('editor');
+    } catch (e) { console.error(e); }
   }, []);
 
   // ── Loading ───────────────────────────────────────────────
@@ -115,6 +133,7 @@ export default function App() {
       onEditWorkflow={openEditor}
       onNewWorkflow={openNewWorkflow}
       onUseWorkflow={openChat}
+      onEditFromQuarantine={openEditFromQuarantine}
     />
   );
 }

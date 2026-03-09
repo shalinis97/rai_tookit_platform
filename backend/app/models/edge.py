@@ -1,5 +1,5 @@
 import uuid
-from sqlalchemy import ForeignKey, UniqueConstraint
+from sqlalchemy import ForeignKey, UniqueConstraint, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID
 
@@ -22,6 +22,8 @@ class Edge(Base):
     to_node_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("nodes.id", ondelete="CASCADE"), nullable=False,
     )
+
+    source_handle: Mapped[str] = mapped_column(String(50), nullable=False, server_default="out")
 
     workflow: Mapped["Workflow"] = relationship("Workflow", back_populates="edges")  # noqa: F821
 

@@ -42,17 +42,6 @@ export default function AgentConfig({ config = {}, onChange }) {
         />
       </Field>
 
-      {/* <Field label={`Temperature — ${config.temperature ?? 0.7}`}>
-        <input
-          type="range"
-          min="0"
-          max="2"
-          step="0.1"
-          value={config.temperature ?? 0.7}
-          onChange={(e) => onChange('temperature', parseFloat(e.target.value))}
-        />
-      </Field> */}
-
       <Field label="Max Tokens">
         <Input
           type="number"

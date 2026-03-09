@@ -4,8 +4,8 @@ from typing import Optional, Any
 from pydantic import BaseModel, ConfigDict, field_validator
 
 
-NODE_TYPES = {"trigger", "agent", "function", "output"}
-
+#NODE_TYPES = {"trigger", "agent", "function", "output"}
+NODE_TYPES = {"trigger", "agent", "function", "output", "condition"}
 
 class NodeBase(BaseModel):
     type: str
@@ -60,6 +60,7 @@ class EdgeBatchItem(BaseModel):
     id: Optional[str] = None
     from_node_id: str   # frontend string ID
     to_node_id: str
+    source_handle: Optional[str] = "out"
 
 
 NodeBatchSave.model_rebuild()

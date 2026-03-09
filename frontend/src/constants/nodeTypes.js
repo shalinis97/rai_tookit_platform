@@ -26,6 +26,15 @@ export const NODE_TYPES = {
     badgeStyle: { background: 'rgba(14,165,233,0.25)', color: '#38bdf8' },
     description: 'Custom code block',
   },
+  condition: {
+    label: 'Condition',
+    icon: '◈',
+    color: '#10b981',
+    colorAlpha: 'rgba(16,185,129,0.2)',
+    badge: 'badge-condition',
+    badgeStyle: { background: 'rgba(16,185,129,0.25)', color: '#34d399' },
+    description: 'If / else branching',
+  },
   output: {
     label: 'Output',
     icon: '📤',

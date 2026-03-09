@@ -4,8 +4,9 @@ from pydantic import BaseModel, ConfigDict
 
 
 class EdgeBase(BaseModel):
-    from_node_id: uuid.UUID
-    to_node_id:   uuid.UUID
+    from_node_id:  uuid.UUID
+    to_node_id:    uuid.UUID
+    source_handle: Optional[str] = "out"
 
 
 class EdgeCreate(EdgeBase):
@@ -15,5 +16,6 @@ class EdgeCreate(EdgeBase):
 class EdgeRead(EdgeBase):
     model_config = ConfigDict(from_attributes=True)
 
-    id:          uuid.UUID
-    workflow_id: uuid.UUID
+    id:            uuid.UUID
+    workflow_id:   uuid.UUID
+    source_handle: Optional[str] = "out"

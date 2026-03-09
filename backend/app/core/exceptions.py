@@ -23,3 +23,12 @@ class ExecutionError(Exception):
     def __init__(self, message: str, node_id: str | None = None):
         self.node_id = node_id
         super().__init__(message)
+
+
+class PolicyViolationError(Exception):
+    """Raised when OPA denies execution at any check point."""
+    def __init__(self, violations: list[str], check_point: str, node_id: str | None = None):
+        self.violations  = violations
+        self.check_point = check_point
+        self.node_id     = node_id
+        super().__init__(f"Policy violation at {check_point}: {'; '.join(violations)}")

@@ -63,7 +63,7 @@ const useWorkflowStore = create((set, get) => ({
     const { activeWfId } = get();
     set((state) => ({
       workflows: state.workflows.map((w) =>
-        w.id === activeWfId ? { ...w, ...meta, status: 'active' } : w
+        w.id === activeWfId ? { ...w, ...meta } : w
       ),
     }));
   },
@@ -155,15 +155,15 @@ const useWorkflowStore = create((set, get) => ({
   setSelectedNode: (id) => set({ selectedNodeId: id }),
 
   // ─── EDGE ACTIONS ──────────────────────────────────────────
-  addEdge: (fromNodeId, toNodeId) => {
+  addEdge: (fromNodeId, toNodeId, sourceHandle = 'out') => {
     const { activeWfId } = get();
     const wf = get().getActiveWorkflow();
     const exists = wf?.edges.some(
-      (e) => e.from === fromNodeId && e.to === toNodeId
+      (e) => e.from === fromNodeId && e.to === toNodeId && e.source_handle === sourceHandle
     );
     if (exists) return false;
 
-    const newEdge = { id: genId('e'), from: fromNodeId, to: toNodeId };
+    const newEdge = { id: genId('e'), from: fromNodeId, to: toNodeId, source_handle: sourceHandle };
     set((state) => ({
       workflows: state.workflows.map((w) =>
         w.id === activeWfId

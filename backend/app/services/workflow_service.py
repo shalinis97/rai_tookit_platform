@@ -44,8 +44,16 @@ async def create(db: AsyncSession, data: WorkflowCreate) -> Workflow:
 async def update(db: AsyncSession, workflow_id: uuid.UUID, data: WorkflowUpdate) -> Workflow:
     workflow = await get_by_id(db, workflow_id)
     update_data = data.model_dump(exclude_unset=True)
+
+    # Never allow a plain PATCH to overwrite quarantined status.
+    # Quarantine is lifted only via policy_service.unquarantine_workflow
+    # which sets it to 'active' before this update is called.
+    if workflow.status == "quarantined":
+        update_data.pop("status", None)
+
     for field, value in update_data.items():
         setattr(workflow, field, value)
+
     await db.flush()
     await db.refresh(workflow)
     return workflow

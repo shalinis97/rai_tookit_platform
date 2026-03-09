@@ -1,24 +1,11 @@
 import asyncio
 import ast
 import json
+import builtins
 import logging
 from app.core.exceptions import ExecutionError
 
 logger = logging.getLogger(__name__)
-
-_SAFE_BUILTINS = {
-    "abs","all","any","bool","dict","divmod","enumerate","filter","float",
-    "format","frozenset","getattr","hasattr","hash","int","isinstance",
-    "issubclass","iter","len","list","map","max","min","next","print",
-    "range","repr","reversed","round","set","slice","sorted","str","sum",
-    "tuple","type","zip",
-}
-
-
-def _make_restricted_globals():
-    import builtins
-    safe = {k: getattr(builtins, k) for k in _SAFE_BUILTINS if hasattr(builtins, k)}
-    return {"__builtins__": safe}
 
 
 class FunctionRunner:
@@ -29,6 +16,7 @@ class FunctionRunner:
 
         logger.info(f"[FUNCTION] Running code (timeout={timeout_seconds}s)")
         logger.info(f"[FUNCTION] input={json.dumps(input_data, default=str)[:200]}")
+        print(input_data)
 
         if not code.strip():
             logger.info("[FUNCTION] No code — passing input through")
@@ -41,6 +29,8 @@ class FunctionRunner:
             )
         except asyncio.TimeoutError:
             raise ExecutionError(f"Function timed out after {timeout_seconds}s")
+        except ExecutionError:
+            raise
         except Exception as e:
             raise ExecutionError(f"Function execution error: {e}")
 
@@ -52,9 +42,12 @@ class FunctionRunner:
 
 
 async def _execute_code(code: str, input_data: dict) -> dict:
-    namespace = _make_restricted_globals()
-    namespace["input"] = input_data
-    namespace["json"]  = json
+    # Full builtins including __import__ so users can import stdlib modules
+    namespace = {
+        "__builtins__": builtins,
+        "json":         json,
+        "asyncio":      asyncio,
+    }
 
     try:
         ast.parse(code)

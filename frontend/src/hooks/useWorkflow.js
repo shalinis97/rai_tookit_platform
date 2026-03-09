@@ -20,9 +20,12 @@ export function useWorkflow() {
   const getPortPosition = (nodeId, side) => {
     const node = activeWorkflow?.nodes.find((n) => n.id === nodeId);
     if (!node) return { x: 0, y: 0 };
+    const isOutput = side === 'out' || side === 'true' || side === 'false';
+    // true port slightly above mid, false port slightly below
+    const yOffset = side === 'true' ? -12 : side === 'false' ? 12 : 0;
     return {
-      x: side === 'out' ? node.x + NODE_WIDTH : node.x,
-      y: node.y + NODE_HEIGHT_MID,
+      x: isOutput ? node.x + NODE_WIDTH : node.x,
+      y: node.y + NODE_HEIGHT_MID + yOffset,
     };
   };
 

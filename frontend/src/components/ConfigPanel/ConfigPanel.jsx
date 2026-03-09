@@ -6,6 +6,7 @@ import AgentConfig from './AgentConfig';
 import FunctionConfig from './FunctionConfig';
 import TriggerConfig from './TriggerConfig';
 import OutputConfig from './OutputConfig';
+import ConditionConfig from './ConditionConfig';
 import AdvancedConfig from './AdvancedConfig';
 import { NODE_TYPES } from '../../constants/nodeTypes';
 import { useWorkflow } from '../../hooks/useWorkflow';
@@ -16,6 +17,7 @@ const CONFIG_COMPONENTS = {
   function: FunctionConfig,
   trigger: TriggerConfig,
   output: OutputConfig,
+  condition: ConditionConfig,
 };
 
 export default function ConfigPanel() {

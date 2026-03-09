@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import AgentsPage from '../../pages/AgentsPage';
 import PolicyPage from '../../pages/PolicyPage';
+import QuarantinePage from '../../pages/QuarantinePage';
 
 const TABS = [
-  { id: 'agents', label: 'Agents' },
-  { id: 'policy', label: 'Policy' },
+  { id: 'agents',     label: 'Agents' },
+  { id: 'policy',     label: 'Policy' },
+  { id: 'quarantine', label: '🔒 Quarantine' },
 ];
 
-export default function AppShell({ onEditWorkflow, onNewWorkflow, onUseWorkflow }) {
+export default function AppShell({ onEditWorkflow, onNewWorkflow, onUseWorkflow, onEditFromQuarantine }) {
   const [activeTab, setActiveTab] = useState('agents');
 
   return (
@@ -15,9 +17,9 @@ export default function AppShell({ onEditWorkflow, onNewWorkflow, onUseWorkflow 
       display: 'flex', flexDirection: 'column',
       height: '100vh', background: 'var(--bg)', overflow: 'hidden',
     }}>
-      {/* ── TOP NAV — only Agents / Policy tabs ───────────────── */}
+      {/* TOP NAV */}
       <header style={{
-        height: 52, minHeight: 52, flexShrink: 0,
+        height: 72, minHeight: 72, flexShrink: 0,
         background: 'var(--surface)',
         borderBottom: '1px solid var(--border)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -25,8 +27,8 @@ export default function AppShell({ onEditWorkflow, onNewWorkflow, onUseWorkflow 
       }}>
         <nav style={{
           display: 'flex', gap: 2,
-          background: 'var(--surface2)', padding: '3px',
-          borderRadius: 8, border: '1px solid var(--border)',
+          background: 'var(--surface2)', padding: '5px',
+          borderRadius: 10, border: '1px solid var(--border)',
         }}>
           {TABS.map(tab => {
             const isActive = tab.id === activeTab;
@@ -35,12 +37,14 @@ export default function AppShell({ onEditWorkflow, onNewWorkflow, onUseWorkflow 
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 style={{
-                  padding: '5px 24px', borderRadius: 6,
+                  padding: '10px 32px', borderRadius: 8,
                   border: 'none', cursor: 'pointer',
                   fontFamily: 'Syne, sans-serif', fontWeight: 600,
                   fontSize: 13, transition: 'all 0.15s',
                   background: isActive ? 'var(--bg)' : 'transparent',
-                  color: isActive ? 'var(--text)' : 'var(--text3)',
+                  color: tab.id === 'quarantine'
+                    ? (isActive ? '#f87171' : 'rgba(248,113,113,0.5)')
+                    : (isActive ? 'var(--text)' : 'var(--text3)'),
                   boxShadow: isActive ? '0 1px 6px rgba(0,0,0,0.4)' : 'none',
                 }}
               >
@@ -51,7 +55,7 @@ export default function AppShell({ onEditWorkflow, onNewWorkflow, onUseWorkflow 
         </nav>
       </header>
 
-      {/* ── PAGE CONTENT ──────────────────────────────────────── */}
+      {/* PAGE CONTENT */}
       <main style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
         {activeTab === 'agents' && (
           <AgentsPage
@@ -61,6 +65,9 @@ export default function AppShell({ onEditWorkflow, onNewWorkflow, onUseWorkflow 
           />
         )}
         {activeTab === 'policy' && <PolicyPage />}
+        {activeTab === 'quarantine' && (
+          <QuarantinePage onEditWorkflow={onEditFromQuarantine} />
+        )}
       </main>
     </div>
   );

@@ -62,8 +62,8 @@ export default function Canvas({ onToast }) {
   const handlePortClick = useCallback(
     (nodeId, portType) => {
       if (!connectingFrom) {
-        // Start connecting from output port only
-        if (portType === 'out' || portType === 'else') {
+        // Start connecting from any output port (out, true, false)
+        if (portType === 'out' || portType === 'true' || portType === 'false' || portType === 'else') {
           setConnectingFrom({ nodeId, portType });
         }
         return;
@@ -71,7 +71,7 @@ export default function Canvas({ onToast }) {
 
       // Finish connection on input port of a different node
       if (connectingFrom.nodeId !== nodeId && portType === 'in') {
-        const created = addEdge(connectingFrom.nodeId, nodeId);
+        const created = addEdge(connectingFrom.nodeId, nodeId, connectingFrom.portType);
         if (created) {
           onToast?.('Connection created', 'success');
         } else {

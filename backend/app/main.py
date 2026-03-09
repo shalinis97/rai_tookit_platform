@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
 from app.database import create_tables
-from app.routers import workflows, nodes, edges, executions
+from app.routers import workflows, nodes, edges, executions, policies, ai_assistant, files
 from app.core.websocket_manager import ws_manager
 
 logging.basicConfig(
@@ -16,6 +16,23 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+
+async def _seed_default_policy():
+    """Load default.rego into OPA sidecar on startup."""
+    import os
+    from app.policy.opa_client import get_opa_client
+    rego_path = os.path.join(os.path.dirname(__file__), "policy", "default.rego")
+    if os.path.exists(rego_path):
+        with open(rego_path) as f:
+            code = f.read()
+        opa = get_opa_client()
+        ok = await opa.upload_policy(code, policy_name="default")
+        if ok:
+            logger.info("[POLICY] Default Rego policy loaded into OPA")
+        else:
+            logger.warning("[POLICY] Could not load default policy (OPA not running?)")
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup
@@ -23,6 +40,7 @@ async def lifespan(app: FastAPI):
     if settings.is_development:
         await create_tables()
         logger.info("Database tables verified")
+    await _seed_default_policy()
     yield
     # Shutdown
     logger.info("Shutting down FlowMind API")
@@ -53,6 +71,9 @@ app.include_router(workflows.router, prefix=API_PREFIX)
 app.include_router(nodes.router, prefix=API_PREFIX)
 app.include_router(edges.router, prefix=API_PREFIX)
 app.include_router(executions.router, prefix=API_PREFIX)
+app.include_router(policies.router, prefix=API_PREFIX)
+app.include_router(ai_assistant.router, prefix=API_PREFIX)
+app.include_router(files.router, prefix=API_PREFIX)
 
 
 # ── WEBSOCKET ─────────────────────────────────────────────────

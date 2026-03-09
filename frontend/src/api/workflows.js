@@ -29,8 +29,9 @@ export function normalizeNode(n) {
 export function normalizeEdge(e) {
   return {
     ...e,
-    from:         e.from_node_id  ?? e.from,
-    to:           e.to_node_id    ?? e.to,
+    from:          e.from_node_id  ?? e.from,
+    to:            e.to_node_id    ?? e.to,
+    source_handle: e.source_handle ?? 'out',
   };
 }
 
@@ -56,5 +57,6 @@ export function denormalizeEdge(e) {
     id:            e.id,
     from_node_id:  e.from ?? e.from_node_id,
     to_node_id:    e.to   ?? e.to_node_id,
+    source_handle: e.source_handle ?? 'out',
   };
 }

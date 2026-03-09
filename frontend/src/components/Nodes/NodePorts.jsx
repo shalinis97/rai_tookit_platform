@@ -31,6 +31,7 @@ function PortDot({ color, onClick }) {
 
 export default function NodePorts({ type, nodeId, onPortClick }) {
   const hasInput  = type !== 'trigger';
+  const isCondition = type === 'condition';
   const hasOutput = type !== 'output';
 
   return (
@@ -40,23 +41,30 @@ export default function NodePorts({ type, nodeId, onPortClick }) {
         {hasInput && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
             <PortDot onClick={(e) => { e.stopPropagation(); onPortClick(nodeId, 'in'); }} />
-            <span style={{ fontSize: 10, color: 'var(--text3)', fontFamily: 'Space Mono, monospace' }}>
-              in
-            </span>
+            <span style={{ fontSize: 10, color: 'var(--text3)', fontFamily: 'Space Mono, monospace' }}>in</span>
           </div>
         )}
       </div>
 
-      {/* OUTPUT PORT */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'flex-end' }}>
-        {hasOutput && (
+      {/* OUTPUT PORTS */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'flex-end' }}>
+        {isCondition ? (
+          <>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 5, flexDirection: 'row-reverse' }}>
+              <PortDot color="#34d399" onClick={(e) => { e.stopPropagation(); onPortClick(nodeId, 'true'); }} />
+              <span style={{ fontSize: 10, color: '#34d399', fontFamily: 'Space Mono, monospace' }}>true</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 5, flexDirection: 'row-reverse' }}>
+              <PortDot color="#f87171" onClick={(e) => { e.stopPropagation(); onPortClick(nodeId, 'false'); }} />
+              <span style={{ fontSize: 10, color: '#f87171', fontFamily: 'Space Mono, monospace' }}>false</span>
+            </div>
+          </>
+        ) : hasOutput ? (
           <div style={{ display: 'flex', alignItems: 'center', gap: 5, flexDirection: 'row-reverse' }}>
             <PortDot onClick={(e) => { e.stopPropagation(); onPortClick(nodeId, 'out'); }} />
-            <span style={{ fontSize: 10, color: 'var(--text3)', fontFamily: 'Space Mono, monospace' }}>
-              out
-            </span>
+            <span style={{ fontSize: 10, color: 'var(--text3)', fontFamily: 'Space Mono, monospace' }}>out</span>
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   );

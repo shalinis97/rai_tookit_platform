@@ -7,6 +7,8 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
+
 MODEL_ALIASES = {
     # High capability (250k token tier)
     "gpt-5.2":        "gpt-5.2",
@@ -18,8 +20,6 @@ MODEL_ALIASES = {
     "gpt-4.1-mini":   "gpt-4.1-mini",
     "gpt-4o-mini":    "gpt-4o-mini",
 }
-
-
 def _interpolate(template: str, data: dict) -> str:
     """Replace {{variable}} placeholders with values from data dict."""
     def replacer(match):
@@ -50,7 +50,6 @@ def _build_messages_from_history(history: list, system_prompt: str) -> list:
 
 class AgentRunner:
     async def run(self, config: dict, input_data: dict) -> dict:
-        logger.info(f"[AGENT] config={config}")
         system_prompt   = config.get("systemPrompt", "You are a helpful assistant.")
         prompt_template = config.get("prompt", "")
         temperature     = float(config.get("temperature", 0.7))
@@ -88,18 +87,11 @@ class AgentRunner:
             return {"output": mock_reply, "model": model, "mock": True}
 
         # ── Build message array ───────────────────────────────
-        # If we have conversation history, thread it properly
-        if history and len(history) > 1:
-            messages = _build_messages_from_history(history, system_prompt)
-            # If the last history entry is the current user message, don't duplicate
-            last = messages[-1] if messages else {}
-            if not (last.get("role") == "user" and last.get("content") == user_message):
-                messages.append({"role": "user", "content": user_message})
-        else:
-            messages = [
-                {"role": "system", "content": system_prompt},
-                {"role": "user",   "content": user_message},
-            ]
+        # Only send system prompt + current user message, no history
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user",   "content": user_message},
+        ]
 
         logger.info(f"[AGENT] Sending {len(messages)} messages to {model}")
 
