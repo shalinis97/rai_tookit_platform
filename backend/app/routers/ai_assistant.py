@@ -1,5 +1,5 @@
 """
-Proxy endpoint for AI Assistant (Claude) — avoids CORS issues with direct browser calls.
+Proxy endpoint for AI Assistant — uses OpenAI GPT.
 """
 import httpx
 from fastapi import APIRouter, HTTPException
@@ -22,31 +22,35 @@ class AssistantRequest(BaseModel):
 
 @router.post("/chat")
 async def ai_chat(req: AssistantRequest):
-    if not settings.ANTHROPIC_API_KEY:
-        raise HTTPException(status_code=503, detail="ANTHROPIC_API_KEY not configured")
+    if not settings.OPENAI_API_KEY:
+        raise HTTPException(status_code=503, detail="OPENAI_API_KEY not configured")
+
+    # Build messages with system prompt prepended
+    messages = [{"role": "system", "content": req.system}]
+    messages += [m.model_dump() for m in req.messages]
 
     try:
         async with httpx.AsyncClient(timeout=60.0) as client:
             response = await client.post(
-                "https://api.anthropic.com/v1/messages",
+                f"{settings.OPENAI_BASE_URL}/chat/completions",
                 headers={
-                    "x-api-key":         settings.ANTHROPIC_API_KEY,
-                    "anthropic-version": "2023-06-01",
-                    "content-type":      "application/json",
+                    "Authorization": f"Bearer {settings.OPENAI_API_KEY}",
+                    "Content-Type":  "application/json",
                 },
                 json={
-                    "model":      "claude-sonnet-4-20250514",
-                    "max_tokens": req.max_tokens,
-                    "system":     req.system,
-                    "messages":   [m.model_dump() for m in req.messages],
+                    "model":              "gpt-5-mini",
+                    #"max_completion_tokens": req.max_tokens,
+                    "messages":           messages,
                 },
             )
             response.raise_for_status()
             data = response.json()
-            text = "".join(b.get("text", "") for b in data.get("content", []))
+            text = data["choices"][0]["message"]["content"]
             return {"content": text}
 
     except httpx.HTTPStatusError as e:
         raise HTTPException(status_code=e.response.status_code, detail=e.response.text[:300])
     except httpx.TimeoutException:
         raise HTTPException(status_code=504, detail="AI request timed out")
+    
+
