@@ -167,7 +167,7 @@ export default function ChatPage({ workflow, onBack }) {
         </div>
         <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 7 }}>
           <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent)', boxShadow: '0 0 8px var(--accent)' }} />
-          <span style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: 16, color: 'var(--text)', letterSpacing: '-0.5px' }}>FlowMind</span>
+          <span style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: 24, color: 'var(--text)', letterSpacing: '-0.5px' }}>चक्रview</span>
         </div>
       </header>
 

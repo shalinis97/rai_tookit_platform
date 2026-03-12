@@ -142,7 +142,7 @@ export default function WorkflowEditorPage({ workflowId, onBack }) {
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
           <div style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--accent)', boxShadow: '0 0 8px var(--accent)', animation: 'logoPulse 2s ease-in-out infinite' }} />
-          <span style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: 15, color: 'var(--text)', letterSpacing: '-0.5px' }}>FlowMind</span>
+          <span style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: 24, color: 'var(--text)', letterSpacing: '-0.5px' }}>चक्रview</span>
         </div>
 
         {activeWorkflow && (

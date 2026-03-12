@@ -38,7 +38,7 @@ async def ai_chat(req: AssistantRequest):
                     "Content-Type":  "application/json",
                 },
                 json={
-                    "model":              "gpt-5-mini",
+                    "model":              "gpt-5.2",
                     #"max_completion_tokens": req.max_tokens,
                     "messages":           messages,
                 },

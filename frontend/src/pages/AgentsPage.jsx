@@ -207,7 +207,7 @@ export default function AgentsPage({ onEditWorkflow, onNewWorkflow, onUseWorkflo
           backgroundSize: '40px 40px',
         }} />
 
-        {/* Left: Create Workflow — Right: FlowMind logo */}
+        {/* Left: Create Workflow — Right: चक्रView logo */}
         <div style={{
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           paddingTop: 28, paddingBottom: 0, position: 'relative', zIndex: 1,
@@ -230,7 +230,7 @@ export default function AgentsPage({ onEditWorkflow, onNewWorkflow, onUseWorkflo
             Create Workflow
           </button>
 
-          {/* FlowMind logo — right */}
+          {/* चक्रView logo — right */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
             <div style={{
               width: 8, height: 8, borderRadius: '50%',
@@ -239,8 +239,8 @@ export default function AgentsPage({ onEditWorkflow, onNewWorkflow, onUseWorkflo
             }} />
             <span style={{
               fontFamily: 'Syne, sans-serif', fontWeight: 800,
-              fontSize: 22, color: 'var(--text)', letterSpacing: '-1px',
-            }}>FlowMind</span>
+              fontSize: 40, color: 'var(--text)', letterSpacing: '-1px',
+            }}>चक्रview</span>
           </div>
         </div>
 

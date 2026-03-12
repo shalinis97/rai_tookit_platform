@@ -24,13 +24,13 @@ export default function TopBar({ onNew, onSave, onRun }) {
       <div style={{
         display: 'flex', alignItems: 'center', gap: 10,
         fontFamily: 'Syne, sans-serif', fontWeight: 800,
-        fontSize: 20, letterSpacing: '-0.5px', color: 'var(--text)',
+        fontSize: 40, letterSpacing: '-0.5px', color: 'var(--text)',
       }}>
         <div className="animate-logo-pulse" style={{
           width: 10, height: 20, borderRadius: '50%',
           background: 'var(--accent)', flexShrink: 0,
         }} />
-        FlowMind
+        चक्रview
       </div>
 
       {/* CENTER — workflow selector */}

@@ -91,7 +91,7 @@ export default function App() {
           width: 7, height: 7, borderRadius: '50%',
           background: 'var(--accent)', animation: 'logoPulse 1s ease-in-out infinite',
         }} />
-        Connecting to FlowMind…
+        Connecting to चक्रview…
       </div>
     );
   }

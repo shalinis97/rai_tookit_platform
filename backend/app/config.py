@@ -15,7 +15,6 @@ class Settings(BaseSettings):
     OPENAI_BASE_URL: str = "https://api.openai.com/v1"
 
     # Security
-    SECRET_KEY: str = "change-this-in-production"
     ENVIRONMENT: str = "development"
 
     # CORS
